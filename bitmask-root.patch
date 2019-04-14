@@ -1,0 +1,21 @@
+--- bitmask-root
++++ bitmask-root
+@@ -617,8 +617,16 @@ def enable_ip_forwarding():
+     """
+     ip_fowarding must be enabled for the firewall to work.
+     """
+-    with open('/proc/sys/net/ipv4/ip_forward', 'w') as f:
+-        f.write('1\n')
++    proc_ip_forward = '/proc/sys/net/ipv4/ip_forward'
++    desired_value = '1\n'
++    with open(proc_ip_forward, "r") as fp:
++        current_value = fp.read()
++    if current_value != desired_value:
++        debug("INFO: enabling ip_forward")
++        with open(proc_ip_forward, 'w') as f:
++            f.write(desired_value)
++    else:
++        debug("INFO: ip_forward already enabled")
+ 
+ 
+ def firewall_start(args):
