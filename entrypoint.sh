@@ -13,17 +13,7 @@ elif [[ -z "${BITMASK_PASS:-}" ]]; then
     exit 2
 fi
 
-log "Applying bitmask-root.patch"
-patch -d /usr/sbin < bitmask-root.patch
-
-log "Checking bitmask"
-bitmaskctl user auth "${BITMASK_USER}" --pass "${BITMASK_PASS}"
-echo "---"
-bitmaskctl vpn get_cert
-echo "---"
-bitmaskctl vpn check
-echo "---"
-log "Starting bitmask vpn"
-bitmaskctl vpn start
+log "Starting bitmask"
+python3 /root/bitmask_init.py -d
 
 exec bash

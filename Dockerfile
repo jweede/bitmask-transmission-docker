@@ -11,5 +11,8 @@ ENV LANG=C.UTF-8
 ENV LEAP_DOCKERIZED=1
 
 WORKDIR /root
-COPY ["entrypoint.sh", "bitmask-root.patch", "./"]
+COPY ["bitmask-root.patch", "./"]
+RUN patch -d /usr/sbin < bitmask-root.patch
+
+COPY ["entrypoint.sh", "bitmask_init.py", "./"]
 ENTRYPOINT ["bash", "entrypoint.sh"]
