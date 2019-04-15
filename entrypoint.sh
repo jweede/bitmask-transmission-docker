@@ -13,7 +13,15 @@ elif [[ -z "${BITMASK_PASS:-}" ]]; then
     exit 2
 fi
 
-log "Starting bitmask"
-python3 /root/bitmask_init.py -d
+function start_bitmask () {
+    log "Starting bitmask"
+    python3 /root/bitmask_init.py -d
+}
 
-exec bash
+if [[ "${1:-}" == "run" ]]; then
+    start_bitmask
+    python3 /root/transmission_init.py /root/transmission.yaml /root/.config/transmission-daemon/settings.json
+    exec transmission-daemon --foreground
+else
+    exec bash
+fi

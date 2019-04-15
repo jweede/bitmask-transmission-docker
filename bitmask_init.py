@@ -15,7 +15,9 @@ log = logging.getLogger(__name__)
 
 
 def call_bitmask(*args):
-    return subprocess.check_output(("bitmaskctl", "--json") + args, universal_newlines=True)
+    return subprocess.check_output(
+        ("bitmaskctl", "--json") + args, universal_newlines=True
+    )
 
 
 def check_ready(vpn_status_raw_json):
@@ -29,7 +31,9 @@ def check_ready(vpn_status_raw_json):
     vpn_status = status["result"]["childrenStatus"]["vpn"]["status"] == "on"
     fw_status = status["result"]["childrenStatus"]["firewall"]["status"] == "on"
     overall_status = status["result"]["status"] == "on"
-    log.debug("vpn_status=%s fw_status=%s status=%s", vpn_status, fw_status, overall_status)
+    log.debug(
+        "vpn_status=%s fw_status=%s status=%s", vpn_status, fw_status, overall_status
+    )
     return vpn_status and fw_status and overall_status
 
 
@@ -38,7 +42,7 @@ def start_vpn(max_retries=5):
     call_bitmask("vpn", "start")
     ready = False
     retries = 0
-    for i in range(1, max_retries+1):
+    for i in range(1, max_retries + 1):
         stat = call_bitmask("vpn", "status")
         ready = check_ready(stat)
         log.debug("check_ready: %s", ready)

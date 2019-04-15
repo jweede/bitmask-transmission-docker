@@ -8,8 +8,11 @@ here="$(dirname "$(realpath "$0")")"
 
 docker build -t "${image_tag}" "${here}"
 
-exec docker run -it \
+exec docker run -it --rm \
+    --name bitmask_transmission \
+    -p 9091:9091 \
     --env-file=dev.env \
     --cap-add=NET_ADMIN --device=/dev/net/tun \
     --sysctl net.ipv6.conf.all.disable_ipv6=0 \
-    "${image_tag}" bash
+    "${image_tag}" "${@}" \
+    ;
