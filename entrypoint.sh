@@ -18,10 +18,10 @@ function start_bitmask () {
     python3 /root/bitmask_init.py -d
 }
 
-if [[ "${1:-}" == "run" ]]; then
+if [[ "${1:-}" == "" ]]; then
     start_bitmask
     python3 /root/transmission_init.py /root/transmission.yaml /root/.config/transmission-daemon/settings.json
     exec transmission-daemon --foreground
 else
-    exec bash
+    exec "$@"
 fi
