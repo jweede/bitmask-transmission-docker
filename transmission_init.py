@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Configures transmission from a yaml file
 """
@@ -6,11 +6,11 @@ import argparse
 import json
 import yaml
 import os
+import subprocess
 
 
 def transmission_config(src, dest):
-    os.makedirs(os.path.dirname(src), exist_ok=True)
-    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    subprocess.check_output(["mkdir", "-p", os.path.dirname(src), os.path.dirname(dest)])
     with open(src) as fp:
         data = yaml.load(fp)
     with open(dest, "w") as fp:

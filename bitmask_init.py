@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Bitmask startup and wait for vpn/firewall initialization
 """
@@ -10,8 +10,19 @@ import json
 import time
 import sys
 
+import requests
+
 logging.basicConfig(level=logging.INFO, format="[%(levelname)-8s] %(message)s")
 log = logging.getLogger(__name__)
+
+EXTERNAL_IP_URL = "https://ifconfig.me/ip"
+
+
+def check_external_ip():
+    """verify with an external service"""
+    res = requests.get(EXTERNAL_IP_URL)
+    res.raise_for_status()
+    return res.text.strip()
 
 
 def call_bitmask(*args):
@@ -79,6 +90,9 @@ def bitmask_init(argv=None):
     log.info("starting vpn")
     # call_bitmask("vpn", "check")
     start_vpn()
+
+    # new_ip = check_external_ip()
+    # log.info("vpn ip: %s", new_ip)
 
 
 if __name__ == "__main__":
