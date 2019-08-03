@@ -48,7 +48,7 @@ def check_ready(vpn_status_raw_json):
     return vpn_status and fw_status and overall_status
 
 
-def start_vpn(max_retries=5):
+def start_vpn(max_retries=10):
     """starts vpn, waits for it to be ready"""
     call_bitmask("vpn", "start")
     ready = False
