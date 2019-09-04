@@ -10,7 +10,9 @@ import subprocess
 
 
 def transmission_config(src, dest):
-    subprocess.check_output(["mkdir", "-p", os.path.dirname(src), os.path.dirname(dest)])
+    subprocess.check_output(
+        ["mkdir", "-p", os.path.dirname(src), os.path.dirname(dest)]
+    )
     with open(src) as fp:
         data = yaml.load(fp)
     with open(dest, "w") as fp:

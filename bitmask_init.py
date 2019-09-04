@@ -3,12 +3,12 @@
 Bitmask startup and wait for vpn/firewall initialization
 """
 import argparse
+import json
 import logging
 import os
 import subprocess
-import json
-import time
 import sys
+import time
 
 import requests
 
