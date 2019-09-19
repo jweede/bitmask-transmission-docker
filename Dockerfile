@@ -13,7 +13,8 @@ RUN set -eu \
       patch \
       python-yaml \
       python-requests \
-    ; rm -rf /var/lib/apt/lists/*
+    ; rm -rf /var/lib/apt/lists/* \
+    ;
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -21,10 +22,13 @@ ENV LEAP_DOCKERIZED=1
 ENV TRANSMISSION_HOME=/downloads/config
 
 WORKDIR /root
-COPY ["bitmask-root.patch", "./"]
-RUN patch -d /usr/sbin < bitmask-root.patch
+COPY ["patches/bitmask-root.patch", "./"]
+RUN set -eu \
+    ; patch -d /usr/sbin < bitmask-root.patch \
+    ; rm bitmask-root.patch \
+    ;
 
-COPY ["entrypoint.sh", "bitmask_init.py", "transmission_init.py", "transmission.yaml", "./"]
+COPY ["docker_scripts/*", "./"]
 ENTRYPOINT ["bash", "entrypoint.sh"]
 EXPOSE 9091
 VOLUME ["/downloads"]
