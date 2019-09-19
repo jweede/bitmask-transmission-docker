@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eux
 image_name=jweede/bitmask-transmission
-image_version=0.1
+image_version=0.2
 
 image_tag="${image_name}:${image_version}"
 here="$(dirname "$(realpath "$0")")"
@@ -9,6 +9,7 @@ here="$(dirname "$(realpath "$0")")"
 source "${here}/dev.env"
 mkdir -p "${TRANSMISSION_DOWNLOAD_DIR}"
 
+#export DOCKER_BUILDKIT=1
 #docker build --pull -t "${image_tag}" "${here}"
 docker pull "${image_tag}"
 
