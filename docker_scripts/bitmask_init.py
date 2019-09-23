@@ -26,18 +26,21 @@ def check_external_ip():
 
 
 def call_bitmask(*args):
-    return subprocess.check_output(
-        ("bitmaskctl", "--json") + args, universal_newlines=True
-    )
+    """wraps calls to bitmaskctl, detects errors"""
+    cmd = ("bitmaskctl", "--json") + args
+    result = subprocess.check_output(cmd, universal_newlines=True)
+    log.debug("%s -> %s", cmd, result)
+    jresult = json.loads(result)
+    if jresult["error"]:
+        raise RuntimeError("cmd={0!r} output={1!r}".format(cmd, jresult))
+    return jresult
 
 
-def check_ready(vpn_status_raw_json):
+def check_ready(status):
     """parses bitmask vpn status"""
-    log.debug("vpn_status: %s", vpn_status_raw_json)
-    status = json.loads(vpn_status_raw_json)
-    error_status = status["error"]
-    if error_status is not None:
-        log.error("vpn status error: %r", error_status)
+    log.debug("vpn_status: %s", status)
+    if status["error"] is not None:
+        log.error("vpn status error: %r", status["error"])
         return False
     vpn_status = status["result"]["childrenStatus"]["vpn"]["status"] == "on"
     fw_status = status["result"]["childrenStatus"]["firewall"]["status"] == "on"

@@ -9,9 +9,9 @@ here="$(dirname "$(realpath "$0")")"
 source "${here}/dev.env"
 mkdir -p "${TRANSMISSION_DOWNLOAD_DIR}"
 
-#export DOCKER_BUILDKIT=1
-#docker build --pull -t "${image_tag}" "${here}"
-docker pull "${image_tag}"
+export DOCKER_BUILDKIT=1
+docker build --pull -t "${image_tag}" "${here}"
+#docker pull "${image_tag}"
 
 exec docker run -it --rm \
     --name bitmask_transmission \

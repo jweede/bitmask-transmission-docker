@@ -1,27 +1,61 @@
-FROM ubuntu:bionic
+ARG bitmask_version=0.10.2
+
+FROM python:2.7 as build
+ARG bitmask_version
 
 RUN set -eu \
-    ; apt update && apt upgrade -y \
-    ; apt install -y leap-archive-keyring \
-    ; echo "deb http://deb.leap.se/client release bionic" > /etc/apt/sources.list.d/bitmask.list \
-    ; apt update && apt install -y \
-      bitmask \
+    ; git clone https://0xacab.org/leap/bitmask-dev.git /bitmask-dev \
+    ; cd /bitmask-dev \
+    ; git checkout ${bitmask_version} \
+    ;
+WORKDIR /bitmask-dev
+RUN pip install -r pkg/requirements-dev.pip
+RUN set -eu \
+    ; python setup.py sdist \
+    ; test -f "/bitmask-dev/dist/leap.bitmask-${bitmask_version}.tar.gz" \
+    ;
+
+FROM ubuntu:bionic as target
+
+RUN set -eu \
+    ; apt-get update && apt-get upgrade -y \
+    ; apt-get install -y \
       iptables \
       transmission-cli \
       transmission-common \
       transmission-daemon \
+      openvpn \
       patch \
+      policykit-1 \
+      python-pip \
+      python-psutil \
+      python-scrypt \
       python-yaml \
       python-requests \
     ; rm -rf /var/lib/apt/lists/* \
     ;
 
+ARG bitmask_version
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV LEAP_DOCKERIZED=1
+ENV SNAP=1
 ENV TRANSMISSION_HOME=/downloads/config
+ENV PYTHONWARNINGS="ignore"
 
 WORKDIR /root
+COPY --from=build \
+    "/bitmask-dev/dist/leap.bitmask-${bitmask_version}.tar.gz" \
+    ./
+RUN pip install "leap.bitmask-${bitmask_version}.tar.gz"
+# bitmask-root doesn't get copied for whatever reason
+COPY --from=build \
+    /bitmask-dev/src/leap/bitmask/vpn/helpers/linux/bitmask-root \
+    /usr/sbin/
+# polkit wants
+COPY --from=build \
+    /bitmask-dev/src/leap/bitmask/vpn/helpers/linux/se.leap.bitmask.policy \
+    /usr/share/polkit-1/actions/
 COPY ["patches/bitmask-root.patch", "./"]
 RUN set -eu \
     ; patch -d /usr/sbin < bitmask-root.patch \
