@@ -79,6 +79,7 @@ def bitmask_init(argv=None):
     parser.add_argument("-d", "--debug", action="store_true")
     parser.add_argument("--username", default=None)
     parser.add_argument("--password", default=None)
+    parser.add_argument("--check-firewall", action="store_true")
     args = parser.parse_args(argv)
     if args.debug:
         log.setLevel(logging.DEBUG)
@@ -94,8 +95,9 @@ def bitmask_init(argv=None):
     # call_bitmask("vpn", "check")
     start_vpn()
 
-    new_ip = check_external_ip()
-    log.info("vpn ip: %s", new_ip)
+    if args.check_firewall:
+        new_ip = check_external_ip()
+        log.info("vpn ip: %s", new_ip)
 
 
 if __name__ == "__main__":

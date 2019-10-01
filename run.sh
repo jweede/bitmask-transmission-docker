@@ -16,7 +16,6 @@ docker build --pull -t "${image_tag}" "${here}"
 exec docker run -it --rm \
     --name bitmask_transmission \
     -p 9091:9091 \
-    --dns=9.9.9.9 \
     --env-file=dev.env \
     --cap-add=NET_ADMIN --device=/dev/net/tun \
     --sysctl net.ipv6.conf.all.disable_ipv6=0 \

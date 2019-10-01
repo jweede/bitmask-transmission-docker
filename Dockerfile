@@ -39,7 +39,6 @@ ARG bitmask_version
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV LEAP_DOCKERIZED=1
-ENV SNAP=1
 ENV TRANSMISSION_HOME=/downloads/config
 ENV PYTHONWARNINGS="ignore"
 
@@ -60,6 +59,12 @@ COPY ["patches/bitmask-root.patch", "./"]
 RUN set -eu \
     ; patch -d /usr/sbin < bitmask-root.patch \
     ; rm bitmask-root.patch \
+    ;
+# fake out ip6tables, so it doesn't do anything
+RUN set -eu \
+    ; rm /sbin/ip6tables \
+    ; printf "#!/bin/bash\necho \"$@\"\n" > /sbin/ip6tables \
+    ; chmod +x /sbin/ip6tables \
     ;
 
 COPY ["docker_scripts/*", "./"]
