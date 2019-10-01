@@ -13,7 +13,7 @@ function validate_env {
       echo "must define bitmask pass in BITMASK_PASS"
       exit 2
   fi
-  python /root/resolve_spotty_dns.py "api.calyx.net" "calyx.net"
+  python /root/resolve_spotty_dns.py "api.calyx.net" "calyx.net" "ifconfig.me"
 }
 
 function start_bitmask {

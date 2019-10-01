@@ -44,6 +44,7 @@ def resolve_spotty_dns(argv=None):
 
     for hostname in args.hostname:
         ip = resolve_hostname(hostname)
+        log.info("Resolved: %s -> %s", hostname, ip)
         add_hosts_entry(hostname, ip)
 
 

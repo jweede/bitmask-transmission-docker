@@ -94,8 +94,8 @@ def bitmask_init(argv=None):
     # call_bitmask("vpn", "check")
     start_vpn()
 
-    # new_ip = check_external_ip()
-    # log.info("vpn ip: %s", new_ip)
+    new_ip = check_external_ip()
+    log.info("vpn ip: %s", new_ip)
 
 
 if __name__ == "__main__":
