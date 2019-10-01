@@ -24,17 +24,20 @@ function start_bitmask {
     python /root/bitmask_init.py --check-firewall
 }
 
+function run_transmission {
+  python /root/transmission_init.py \
+        /root/transmission.yaml \
+        "${TRANSMISSION_HOME}/settings.json"
+  exec transmission-daemon --foreground
+}
+
 export TRANSMISSION_HOME="${TRANSMISSION_HOME:-$HOME/tm_config}"
 
 if [[ "${1:-}" == "" ]]; then
     validate_env
     fix_dns
     start_bitmask
-    export DEBUG=1
-    python /root/transmission_init.py \
-        /root/transmission.yaml \
-        "${TRANSMISSION_HOME}/settings.json"
-    exec transmission-daemon --foreground
+    run_transmission
 else
     exec "$@"
 fi
