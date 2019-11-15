@@ -9,9 +9,7 @@ max-peers-global: 200
 peer-port: 51413
 pex-enabled: 1
 port-forwarding-enabled: 0
-rpc-authentication-required: 1
-rpc-username: "transmission"
-rpc-password: "transmission"
+rpc-authentication-required: 0
 rpc-port: 9091
 rpc-whitelist-enabled: 0
 upload-limit: 100
