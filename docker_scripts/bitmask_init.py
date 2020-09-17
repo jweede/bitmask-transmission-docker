@@ -30,9 +30,14 @@ def call_bitmask(*args):
     cmd = ("bitmaskctl", "--json") + args
     result = subprocess.check_output(cmd, universal_newlines=True)
     log.debug("%s -> %s", cmd, result)
-    jresult = json.loads(result)
-    if jresult["error"]:
-        raise RuntimeError("cmd={0!r} output={1!r}".format(cmd, jresult))
+    try:
+        jresult = json.loads(result)
+        if jresult["error"]:
+            raise RuntimeError("cmd={0!r} output={1!r}".format(cmd, jresult))
+    except ValueError:
+        raise RuntimeError(
+            "JSON decode problem: cmd={0!r} output={1!r}".format(cmd, result)
+        )
     return jresult
 
 
@@ -72,14 +77,16 @@ def start_vpn(max_retries=10):
         sys.exit(2)
 
 
+parser = argparse.ArgumentParser(
+    description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+)
+parser.add_argument("-d", "--debug", action="store_true")
+parser.add_argument("--username", default=None)
+parser.add_argument("--password", default=None)
+parser.add_argument("--check-firewall", action="store_true")
+
+
 def bitmask_init(argv=None):
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("-d", "--debug", action="store_true")
-    parser.add_argument("--username", default=None)
-    parser.add_argument("--password", default=None)
-    parser.add_argument("--check-firewall", action="store_true")
     args = parser.parse_args(argv)
     if args.debug:
         log.setLevel(logging.DEBUG)

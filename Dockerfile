@@ -9,7 +9,8 @@ RUN set -eu \
     ; git checkout ${bitmask_version} \
     ;
 WORKDIR /bitmask-dev
-RUN pip install -r pkg/requirements-dev.pip
+COPY docker_scripts/bitmask-dev-requirements.txt ./
+RUN pip install -r bitmask-dev-requirements.txt
 RUN set -eu \
     ; python setup.py sdist \
     ; test -f "/bitmask-dev/dist/leap.bitmask-${bitmask_version}.tar.gz" \
@@ -46,7 +47,7 @@ WORKDIR /root
 COPY --from=build \
     "/bitmask-dev/dist/leap.bitmask-${bitmask_version}.tar.gz" \
     ./
-RUN pip install "leap.bitmask-${bitmask_version}.tar.gz"
+RUN pip install "leap.bitmask-${bitmask_version}.tar.gz" 'pyrsistent<0.17.0'
 # bitmask-root doesn't get copied for whatever reason
 COPY --from=build \
     /bitmask-dev/src/leap/bitmask/vpn/helpers/linux/bitmask-root \
