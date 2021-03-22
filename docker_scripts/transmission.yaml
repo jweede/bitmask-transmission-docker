@@ -12,7 +12,7 @@ port-forwarding-enabled: 0
 rpc-authentication-required: 0
 rpc-port: 9091
 rpc-whitelist-enabled: 0
-speed-limit-up: 2048
+speed-limit-up: 1024
 speed-limit-up-enabled: 1
 
 ratio-limit: 2.0
