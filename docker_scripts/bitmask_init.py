@@ -15,7 +15,7 @@ import requests
 logging.basicConfig(level=logging.INFO, format="[%(levelname)-8s] %(message)s")
 log = logging.getLogger(__name__)
 
-EXTERNAL_IP_URL = "https://ifconfig.me/ip"
+EXTERNAL_IP_URL = "http://ifconfig.me/ip"
 
 
 def check_external_ip():
