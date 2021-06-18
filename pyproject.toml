@@ -10,7 +10,7 @@ requests = "^2.25.1"
 PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
-black = "^20.8b1"
+black = "*"
 pytest = "^6.2.3"
 pytest-xdist = "^2.2.1"
 
