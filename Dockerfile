@@ -4,6 +4,7 @@ FROM python:2.7 as build
 ARG bitmask_version
 
 RUN set -eu \
+    ; apt-get update && apt-get upgrade -y \
     ; git clone https://0xacab.org/leap/bitmask-dev.git /bitmask-dev \
     ; cd /bitmask-dev \
     ; git checkout ${bitmask_version} \
@@ -47,7 +48,7 @@ WORKDIR /root
 COPY --from=build \
     "/bitmask-dev/dist/leap.bitmask-${bitmask_version}.tar.gz" \
     ./
-RUN pip install "leap.bitmask-${bitmask_version}.tar.gz" 'pyrsistent<0.17.0'
+RUN pip install "leap.bitmask-${bitmask_version}.tar.gz" 'pyrsistent<0.17.0' 'jsonschema<4.0.0'
 # bitmask-root doesn't get copied for whatever reason
 COPY --from=build \
     /bitmask-dev/src/leap/bitmask/vpn/helpers/linux/bitmask-root \
@@ -68,6 +69,8 @@ RUN set -eu \
     ; chmod +x /sbin/ip6tables \
     ;
 
+COPY ["zerossl.crt", "/usr/local/share/ca-certificates/"]
+RUN  update-ca-certificates
 COPY ["docker_scripts/*", "./"]
 ENTRYPOINT ["bash", "entrypoint.sh"]
 EXPOSE 9091
