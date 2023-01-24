@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eux
 image_name=jweede/bitmask-transmission
-image_version=0.2
+image_version=0.4
 
 image_tag="${image_name}:${image_version}"
 here="$(dirname "$(realpath "$0")")"
