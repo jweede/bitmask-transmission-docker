@@ -2,11 +2,12 @@
 """
 Adapted from https://gitlab.com/nitrohorse/bitmask-openvpn-generator
 """
-import os
 import json
+import os
 import pathlib
-import requests
 from datetime import datetime
+
+import requests
 from OpenSSL import crypto
 
 ca_cert = 'ca_cert.pem'

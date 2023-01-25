@@ -10,8 +10,7 @@ source "${here}/dev.env"
 mkdir -p "${TRANSMISSION_DOWNLOAD_DIR}"
 
 export DOCKER_BUILDKIT=1
-docker build -t "${image_tag}" "${here}"
-#docker pull "${image_tag}"
+docker build --pull -t "${image_tag}" "${here}"
 
 args=(
   --name bitmask_transmission
