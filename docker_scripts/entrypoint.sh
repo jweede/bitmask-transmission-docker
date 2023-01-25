@@ -24,12 +24,18 @@ function start_vpn {
     log "Starting bitmask"
     printf '10\n1\n3\n' | python3 /root/openvpn_generator.py
     sed -ri 's|^(verify-x509-name vpn12-nyc)[\.a-z0-9]+|\1|' /root/bitmask_ovpns/*
-    openvpn --config /root/bitmask_ovpns/*.ovpn
+    openvpn --config /root/bitmask_ovpns/*.ovpn &
+    openvpn_pid=$!
+    echo "OpenVPN launched as ${openvpn_pid}"
 }
 
 function setup_firewall {
+  set -euo pipefail
   export DEBUG=true
-  python3 /root/bitmask-root firewall start
+  local gateway
+  gateway="$(awk '$1 == "remote" { print $2; exit; }' /root/bitmask_ovpns/*.ovpn )"
+  [[ -n "${gateway}" ]]
+  python3 /root/bitmask-root firewall start "${gateway}"
 }
 
 function run_transmission {
@@ -44,9 +50,9 @@ export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 if [[ "${1:-}" == "" ]]; then
     validate_env
-    fix_dns
+#    fix_dns
     start_vpn
-#    setup_firewall
+    setup_firewall
     run_transmission
 else
     exec "$@"
