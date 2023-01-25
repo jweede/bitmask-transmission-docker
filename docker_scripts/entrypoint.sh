@@ -20,26 +20,33 @@ function fix_dns {
   python3 /root/resolve_spotty_dns.py "api.calyx.net" "calyx.net" "ifconfig.me"
 }
 
-function start_bitmask {
+function start_vpn {
     log "Starting bitmask"
-    printf '10\n1\n3\n' | python3 docker_scripts/openvpn_generator.py
-    openvpn --config /root/bitmask_ovpns/*.ovpn &
+    printf '10\n1\n3\n' | python3 /root/openvpn_generator.py
+    sed -ri 's|^(verify-x509-name vpn12-nyc)[\.a-z0-9]+|\1|' /root/bitmask_ovpns/*
+    openvpn --config /root/bitmask_ovpns/*.ovpn
+}
 
+function setup_firewall {
+  export DEBUG=true
+  python3 /root/bitmask-root firewall start
 }
 
 function run_transmission {
-  python /root/transmission_init.py \
+  python3 /root/transmission_init.py \
         /root/transmission.yaml \
         "${TRANSMISSION_HOME}/settings.json"
   exec transmission-daemon --foreground
 }
 
 export TRANSMISSION_HOME="${TRANSMISSION_HOME:-$HOME/tm_config}"
+export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 if [[ "${1:-}" == "" ]]; then
     validate_env
     fix_dns
-    start_bitmask
+    start_vpn
+#    setup_firewall
     run_transmission
 else
     exec "$@"
