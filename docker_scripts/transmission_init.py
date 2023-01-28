@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Configures transmission from a yaml file
 """
@@ -14,7 +14,7 @@ def transmission_config(src, dest):
         ["mkdir", "-p", os.path.dirname(src), os.path.dirname(dest)]
     )
     with open(src) as fp:
-        data = yaml.load(fp)
+        data = yaml.safe_load(fp)
     with open(dest, "w") as fp:
         json.dump(data, fp)
 
