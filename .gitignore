@@ -1,5 +1,11 @@
 # ignore these
 dev.env
 
-__pycache__/
+*.pyc
 *.pyo
+__pycache__/
+
+calyx/
+riseup/
+bitmask_ovpns/
+/providers.json
