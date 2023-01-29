@@ -24,6 +24,8 @@ def test_openvpn_generator_output(minput: mock.MagicMock, tmp_path, monkeypatch)
         "3",
     ]
     monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(openvpn_generator, "cache_dir", tmp_path)
+    expected_dir.mkdir(exist_ok=True)
     openvpn_generator.main()
 
     assert openvpn_generator.providers

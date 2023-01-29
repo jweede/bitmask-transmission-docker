@@ -8,4 +8,5 @@ __pycache__/
 calyx/
 riseup/
 bitmask_ovpns/
+_ovpn_cache/
 /providers.json
