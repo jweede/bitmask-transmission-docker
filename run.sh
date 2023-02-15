@@ -19,6 +19,8 @@ args=(
 #  --dns 8.8.8.8
   --cap-add=NET_ADMIN --device=/dev/net/tun
   --sysctl net.ipv6.conf.all.disable_ipv6=0
+  --memory 5g
+  --memory-reservation 5g
   --mount "type=bind,source=${TRANSMISSION_DOWNLOAD_DIR},destination=/downloads"
   "${image_tag}" "${@}"
 )

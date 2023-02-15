@@ -18,7 +18,7 @@ RUN set -eu \
       dnsutils \
       tini \
     ; rm -rf /var/lib/apt/lists/* \
-
+    ;
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV LEAP_DOCKERIZED=1
@@ -26,11 +26,11 @@ ENV TRANSMISSION_HOME=/downloads/config
 
 WORKDIR /root
 # fake out ip6tables, so it doesn't do anything
-#RUN set -eu \
-#    ; rm /sbin/ip6tables \
-#    ; printf "#!/bin/bash\necho \"$@\"\n" > /sbin/ip6tables \
-#    ; chmod +x /sbin/ip6tables \
-#    ;
+RUN set -eu \
+    ; rm /sbin/ip6tables \
+    ; printf "#!/bin/bash\necho \"$@\"\n" > /sbin/ip6tables \
+    ; chmod +x /sbin/ip6tables \
+    ;
 COPY ./docker_scripts /root/
 RUN chmod +x /root/*.sh /root/*.py
 RUN cp zerossl.crt /usr/local/share/ca-certificates/

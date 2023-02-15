@@ -1,2 +1,5 @@
 # ignore these
 dev.env
+
+__pycache__/
+*.pyo
