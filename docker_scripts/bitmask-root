@@ -995,7 +995,7 @@ def fw_email_stop():
 USAGE = """
 This is bitmask-root version {VERSION}
 
-This program manipulates the Bitmask firewall. It is *not* intented to be used
+This program manipulates the Bitmask firewall. It is *not* intended to be used
 manually.
 
 Commands:

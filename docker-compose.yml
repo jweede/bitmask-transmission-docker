@@ -1,0 +1,37 @@
+---
+
+services:
+  bitmask_vpn:
+    build: .
+    container_name: bitmask_vpn
+    env_file: [ "dev.env" ]
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    devices: [ "/dev/net/tun" ]
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 1.1.1.1
+    mem_limit: 5g
+    mem_reservation: 5g
+#    restart: unless-stopped
+    ports:
+      # transmission ports
+      - 127.0.0.1:9093:9091
+
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    env_file: [ "dev.env" ]
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    network_mode: "service:bitmask_vpn"
+    depends_on: [bitmask_vpn]
+    volumes:
+      - "${TRANSMISSION_DOWNLOAD_DIR}:/downloads"
+#    restart: unless-stopped
+
