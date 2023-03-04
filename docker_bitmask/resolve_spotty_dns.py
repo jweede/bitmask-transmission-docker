@@ -14,7 +14,7 @@ HOSTS_FILE = "/etc/hosts"
 
 
 def resolve_hostname(hostname, retries=10):
-    for i in range(retries):
+    for _ in range(retries):
         try:
             ip = socket.gethostbyname(hostname)
             return ip

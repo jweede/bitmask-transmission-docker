@@ -27,7 +27,7 @@ RUN set -eu \
     ; printf "#!/bin/bash\necho \"$@\"\n" > /sbin/ip6tables \
     ; chmod +x /sbin/ip6tables \
     ;
-COPY ./docker_scripts /root/
+COPY ./* /root/
 RUN chmod +x /root/*.sh /root/*.py
 RUN cp zerossl.crt /usr/local/share/ca-certificates/
 RUN  update-ca-certificates

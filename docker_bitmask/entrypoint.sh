@@ -52,14 +52,6 @@ function setup_firewall {
   python3 /root/bitmask-root firewall start "${gateway}"
 }
 
-function run_transmission {
-  python3 /root/transmission_init.py \
-        /root/transmission.yaml \
-        "${TRANSMISSION_HOME}/settings.json"
-  exec transmission-daemon --foreground
-}
-
-export TRANSMISSION_HOME="${TRANSMISSION_HOME:-$HOME/tm_config}"
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 if [[ "${1:-}" == "" ]]; then
@@ -70,7 +62,6 @@ if [[ "${1:-}" == "" ]]; then
     setup_firewall
     fix_dns
     wait $openvpn_pid
-#    run_transmission
 else
     exec "$@"
 fi

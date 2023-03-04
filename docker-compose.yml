@@ -2,7 +2,7 @@
 
 services:
   bitmask_vpn:
-    build: .
+    build: docker_bitmask
     container_name: bitmask_vpn
     env_file: [ "dev.env" ]
     cap_add:
@@ -16,13 +16,14 @@ services:
       - 1.1.1.1
     mem_limit: 5g
     mem_reservation: 5g
-#    restart: unless-stopped
+    restart: unless-stopped
     ports:
       # transmission ports
       - 127.0.0.1:9093:9091
 
   transmission:
-    image: lscr.io/linuxserver/transmission:latest
+#    image: lscr.io/linuxserver/transmission:latest
+    build: docker_transmission
     container_name: transmission
     env_file: [ "dev.env" ]
     environment:
@@ -33,5 +34,5 @@ services:
     depends_on: [bitmask_vpn]
     volumes:
       - "${TRANSMISSION_DOWNLOAD_DIR}:/downloads"
-#    restart: unless-stopped
-
+      - "${TRANSMISSION_DOWNLOAD_DIR}/config:/config"
+    restart: unless-stopped
