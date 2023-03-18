@@ -4,7 +4,7 @@ services:
   bitmask_vpn:
     build: docker_bitmask
     container_name: bitmask_vpn
-    env_file: [ "dev.env" ]
+    env_file: [ ".env" ]
     cap_add:
       - NET_ADMIN
     sysctls:
@@ -25,7 +25,7 @@ services:
 #    image: lscr.io/linuxserver/transmission:latest
     build: docker_transmission
     container_name: transmission
-    env_file: [ "dev.env" ]
+    env_file: [ ".env" ]
     environment:
       - PUID=1000
       - PGID=1000
@@ -35,4 +35,6 @@ services:
     volumes:
       - "${TRANSMISSION_DOWNLOAD_DIR}:/downloads"
       - "${TRANSMISSION_DOWNLOAD_DIR}/config:/config"
+    mem_limit: 5g
+    mem_reservation: 5g
     restart: always
