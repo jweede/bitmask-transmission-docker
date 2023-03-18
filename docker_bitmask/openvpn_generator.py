@@ -109,10 +109,11 @@ def fetch_and_save_ca_cert(ca_cert_uri, ca_cert_path):
     # Fetching for Calyx throws
     # [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate
     # verify=False for now
-    if ca_cert_uri == 'https://calyx.net/ca.crt':
-        resp = requests.get(ca_cert_uri, verify=False)
-    else:
+    try:
         resp = requests.get(ca_cert_uri)
+    except requests.exceptions.SSLError:
+        print(f"Cert invalid for {ca_cert_uri}, retrying...")
+        resp = requests.get(ca_cert_uri, verify=False)
     pathlib.Path(ca_cert_path).write_bytes(resp.content)
 
 
