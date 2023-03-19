@@ -16,14 +16,28 @@ function validate_env {
 #  fi
 }
 
+function check_dns {
+  python3 -c "import socket;socket.gethostbyname('apple.com')"
+}
+
 function fix_dns {
-  python3 /root/resolve_spotty_dns.py "api.calyx.net" "calyx.net" "ifconfig.me"
+#  python3 /root/resolve_spotty_dns.py "api.calyx.net" "calyx.net" "ifconfig.me"
+  log "Fixing DNS"
+  if ! check_dns; then
+    echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    sleep 2
+  fi
+  check_dns
+}
+
+function template_vpn {
+  log "Templating openvpn config"
+  printf '10\n1\n3\n' | python3 /root/openvpn_generator.py
+  sed -ri 's|^(verify-x509-name vpn12-nyc)[\.a-z0-9]+|\1|' /root/bitmask_ovpns/*
 }
 
 function start_vpn {
     log "Starting bitmask"
-    printf '10\n1\n3\n' | python3 /root/openvpn_generator.py
-    sed -ri 's|^(verify-x509-name vpn12-nyc)[\.a-z0-9]+|\1|' /root/bitmask_ovpns/*
     openvpn --config /root/bitmask_ovpns/*.ovpn &
     openvpn_pid=$!
     echo "OpenVPN launched as ${openvpn_pid}"
@@ -38,22 +52,16 @@ function setup_firewall {
   python3 /root/bitmask-root firewall start "${gateway}"
 }
 
-function run_transmission {
-  python3 /root/transmission_init.py \
-        /root/transmission.yaml \
-        "${TRANSMISSION_HOME}/settings.json"
-  exec transmission-daemon --foreground
-}
-
-export TRANSMISSION_HOME="${TRANSMISSION_HOME:-$HOME/tm_config}"
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 if [[ "${1:-}" == "" ]]; then
     validate_env
 #    fix_dns
+    template_vpn
     start_vpn
     setup_firewall
-    run_transmission
+    fix_dns
+    wait $openvpn_pid
 else
     exec "$@"
 fi
