@@ -28,7 +28,7 @@ WORKDIR /root
 #    ; printf "#!/bin/bash\necho \"$@\"\n" > /sbin/ip6tables \
 #    ; chmod +x /sbin/ip6tables \
 #    ;
-COPY ./entrypoint.sh /root/
+COPY ./*.sh /root/
 RUN chmod +x /root/*.sh
 #RUN cp zerossl.crt /usr/local/share/ca-certificates/
 #RUN  update-ca-certificates
