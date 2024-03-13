@@ -4,18 +4,6 @@ set -euo pipefail
 function log {
     echo "$@" >&2
 }
-
-function validate_env {
-  echo ok
-#  if [[ -z "${BITMASK_USER:-}" ]]; then
-#      echo "must define bitmask user in BITMASK_USER"
-#      exit 2
-#  elif [[ -z "${BITMASK_PASS:-}" ]]; then
-#      echo "must define bitmask pass in BITMASK_PASS"
-#      exit 2
-#  fi
-}
-
 function check_dns {
   python3 -c "import socket;socket.gethostbyname('apple.com')"
 }
@@ -30,15 +18,36 @@ function fix_dns {
   check_dns
 }
 
+
 function template_vpn {
+  cat - >/etc/riseup-vpn.yaml <<YAML
+---
+# /etc/riseup-vpn.yaml
+
+server: vpn12-nyc.riseup.net
+protocol: udp
+port: 53
+
+# excluded_routes: list servcies that should not be routed over VPN
+# can be an ipaddress, network or hostname
+# your local subnet is excluded by default
+excluded_routes:
+  - 8.8.8.8
+
+# os user/group
+user: root
+group: root
+YAML
+
+  mkdir -p /etc/openvpn/client
   log "Templating openvpn config"
-  printf '10\n1\n3\n' | python3 /root/openvpn_generator.py
-  sed -ri 's|^(verify-x509-name vpn12-nyc)[\.a-z0-9]+|\1|' /root/bitmask_ovpns/*
+  riseup-vpn-configurator --update
+  riseup-vpn-configurator -g
 }
 
 function start_vpn {
     log "Starting bitmask"
-    openvpn --config /root/bitmask_ovpns/*.ovpn &
+    openvpn --config /etc/openvpn/client/riseup.conf
     openvpn_pid=$!
     echo "OpenVPN launched as ${openvpn_pid}"
 }
@@ -55,12 +64,12 @@ function setup_firewall {
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 if [[ "${1:-}" == "" ]]; then
-    validate_env
 #    fix_dns
     template_vpn
-    start_vpn
-    setup_firewall
-    fix_dns
+    exec openvpn --config /etc/openvpn/client/riseup.conf
+#    start_vpn
+#    setup_firewall
+#    fix_dns
     wait $openvpn_pid
 else
     exec "$@"

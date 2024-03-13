@@ -29,7 +29,6 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Etc/UTC
     network_mode: "service:bitmask_vpn"
     depends_on: [bitmask_vpn]
     volumes:
