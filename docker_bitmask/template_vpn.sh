@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cat - >/etc/riseup-vpn.yaml <<YAML
+tee /etc/riseup-vpn.yaml <<YAML
 ---
 # /etc/riseup-vpn.yaml
 

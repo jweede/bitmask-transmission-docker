@@ -1,0 +1,13 @@
+diff --git a/__init__.py b/__init__.py
+index e6295525..3411bfc6 100644
+--- a/__init__.py
++++ b/__init__.py
+@@ -116,7 +116,7 @@ def update_vpn_client_credentials() -> None:
+     """
+     logging.info("Updating client certificate/key")
+     try:
+-        resp = requests.get(VPN_CLIENT_CREDENTIALS_URL)
++        resp = requests.get(VPN_CLIENT_CREDENTIALS_URL, headers={"Accept": "text/plain"})
+         resp.raise_for_status()
+         SEPERATOR = "-----BEGIN CERTIFICATE-----"
+         parts = resp.text.split(SEPERATOR)

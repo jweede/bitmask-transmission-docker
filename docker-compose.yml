@@ -36,4 +36,4 @@ services:
       - "${TRANSMISSION_DOWNLOAD_DIR}/config:/config"
     mem_limit: 5g
     mem_reservation: 5g
-    restart: always
+    restart: "no"
