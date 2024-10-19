@@ -3,20 +3,29 @@ Enforces transmission configuration
 """
 import argparse
 import json
+import logging
 import os
 import pathlib
 import re
 import subprocess
+import time
+
+script_name = pathlib.Path(__file__).name
+
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(script_name)
 
 
 class TransmissionSettingsManager:
 
     def __init__(self, settings_path):
-        self.s = pathlib.Path(settings_path)
+        self.s = pathlib.Path(settings_path).resolve()
         try:
             self.settings = json.loads(self.s.read_text())
+            log.info("Loaded settings from %s", self.s)
         except:
             self.settings = {}
+            log.warning("No settings found, initializing %s", self.s)
 
     def set_defaults(self):
         self.settings.update({
@@ -32,6 +41,9 @@ class TransmissionSettingsManager:
 
     def bind_to_interface_addresses(self, dev_name):
         """finds the interface addresses using `ip` and adds them as settings to transmission."""
+        # wait for dev to exist
+        self.wait_for_interface(dev_name)
+
         ip_output = subprocess.check_output(["ip", "addr", "show", "dev", dev_name], text=True)
         m4 = re.search(r"inet ([0-9.]+)/[0-9]+", ip_output)
         if m4:
@@ -40,8 +52,21 @@ class TransmissionSettingsManager:
         if m6:
             self.settings["bind-address-ipv6"] = m6.group(1)
 
+    @staticmethod
+    def wait_for_interface(dev_name, retries=10, interval=5):
+        for i in range(1, retries+1):
+            if pathlib.Path(f"/sys/class/net/{dev_name}").exists():
+                return True
+            else:
+                log.warning(f"{dev_name} not ready yet, retrying %d", i)
+                time.sleep(interval)
+        else:
+            log.error("Maximum retries reached")
+            raise RuntimeError(f"Device {dev_name!r} still missing after {retries} attempts")
+
     def write_settings(self):
         self.s.write_text(json.dumps(self.settings, indent=4, sort_keys=True))
+        log.info("Wrote transmission settings to %s", self.s)
 
     @classmethod
     def main(cls, argv=None):
