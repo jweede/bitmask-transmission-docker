@@ -1,0 +1,2 @@
+# min	hour	day	month	weekday	command
+*/15	*	*	*	*	/transmission_settings.py /config/settings.json

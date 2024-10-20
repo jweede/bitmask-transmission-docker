@@ -1,3 +1,4 @@
 FROM lscr.io/linuxserver/transmission:latest
-COPY *.py /
-COPY *.sh /custom-cont-init.d/
+COPY custom-cont-init.d/* /custom-cont-init.d/
+COPY crontabs/* /etc/crontabs/
+COPY transmission_settings.py /
