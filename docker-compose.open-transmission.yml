@@ -1,0 +1,21 @@
+---
+
+services:
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission_open
+    env_file: [ ".env" ]
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - "${TRANSMISSION_DOWNLOAD_DIR}/open:/downloads"
+      - "${TRANSMISSION_DOWNLOAD_DIR}/open/config:/config"
+    mem_limit: 5g
+    mem_reservation: 5g
+    restart: "always"
+    ports:
+      # transmission ports
+      - "127.0.0.1:9091:9091"
+      - "51413:51413"
+      - "51413:51413/udp"
