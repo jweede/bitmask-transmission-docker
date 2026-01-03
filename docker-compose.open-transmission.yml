@@ -9,7 +9,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - "${TRANSMISSION_DOWNLOAD_DIR}/open:/downloads"
+      - "${TRANSMISSION_DOWNLOAD_DIR}:/downloads"
       - "${TRANSMISSION_DOWNLOAD_DIR}/open/config:/config"
     mem_limit: 5g
     mem_reservation: 5g
