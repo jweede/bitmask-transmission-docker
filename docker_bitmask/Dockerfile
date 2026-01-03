@@ -1,5 +1,5 @@
 FROM ghcr.io/astral-sh/uv:0.4 as uv
-FROM ubuntu:24.04 as target
+FROM docker.io/ubuntu:24.04 as target
 RUN set -eu \
     ; apt-get update && apt-get upgrade -y \
     ; DEBIAN_FRONTEND=noninteractive apt-get -y install \
