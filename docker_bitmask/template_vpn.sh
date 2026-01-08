@@ -5,7 +5,8 @@ tee /etc/riseup-vpn.yaml <<YAML
 ---
 # /etc/riseup-vpn.yaml
 
-server: vpn12-nyc.riseup.net
+#server: vpn12-nyc.riseup.net
+server: vpn18-mtl.riseup.net
 protocol: udp
 port: 53
 
@@ -14,6 +15,8 @@ port: 53
 # your local subnet is excluded by default
 excluded_routes:
   - 8.8.8.8
+  - 8.8.4.4
+  - 1.1.1.1
 
 # os user/group
 user: root

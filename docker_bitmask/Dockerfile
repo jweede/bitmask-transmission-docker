@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.4 as uv
+FROM ghcr.io/astral-sh/uv:0.9 as uv
 FROM docker.io/ubuntu:24.04 as target
 RUN set -eu \
     ; apt-get update && apt-get upgrade -y \

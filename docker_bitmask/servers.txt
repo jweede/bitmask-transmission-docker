@@ -1,0 +1,21 @@
+vpn01-sea.riseup.net	Seattle
+vpn02-par.riseup.net	Paris
+vpn03-par.riseup.net	Paris
+vpn04-ams.riseup.net	Amsterdam
+vpn05-par.riseup.net	Paris
+vpn06-ams.riseup.net	Amsterdam
+vpn07-par.riseup.net	Paris
+vpn08-par.riseup.net	Paris
+vpn10-mtl.riseup.net	Montreal
+vpn11-par.riseup.net	Paris
+vpn12-nyc.riseup.net	New York City
+vpn13-ams.riseup.net	Amsterdam
+vpn14-par.riseup.net	Paris
+vpn15-sea.riseup.net	Seattle
+vpn16-sea.riseup.net	Seattle
+vpn18-mtl.riseup.net	Montreal
+vpn19-ams.riseup.net	Amsterdam
+vpn20-par.riseup.net	Paris
+vpn21-par.riseup.net	Paris
+vpn22-mia.riseup.net	Miami
+vpn23-mia.riseup.net	Miami

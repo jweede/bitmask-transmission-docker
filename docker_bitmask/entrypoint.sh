@@ -4,7 +4,7 @@ set -euo pipefail
 here="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 
 function log {
-    echo "$@" >&2
+    echo "[entrypoint.sh] $*" >&2
 }
 
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
